@@ -19,3 +19,11 @@
 **Note:**
 
 \- Environment variables are git ignored for security purposes. Requires a .env file in tools folder with proper API keys for routes
+
+**How to run**
+
+\- Link your code to Claude desktop or other LLM
+
+\- Check the availability, in Claude in file > settings > developer next to your server it should say running
+
+\- Ask it something, there are sample prompts commented in mcp_server.py
