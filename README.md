@@ -31,17 +31,20 @@
 \- Windows:
 \- %APPDATA%\Claude\claude_desktop_config.json
 
-\- Add your server to the config like this:
-\- {
-\-  "mcpServers": {
-\-    "my-server": {
-\-      "command": "python",
-\-      "args": ["/absolute/path/to/mcp_server.py"]
-\-    }
-\-  }
-\-}
+- Add your server to the config like this:
 
-\- Restart Claude Desktop
+```json
+    {
+      "mcpServers": {
+        "my-server": {
+          "command": "python",
+          "args": ["/absolute/path/to/mcp_server.py"]
+        }
+      }
+    }
+```
+
+- Restart Claude Desktop
 
 \- Go to File → Settings → Developer. You should see your server listed with a blue "running" status
 \- Common issues: incorrect file paths, first run the code locally in an IDE(VSCode) to see if it errors, Check Claude's MCP logs(button in the same tab as the configuration file)
