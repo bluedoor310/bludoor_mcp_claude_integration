@@ -1,6 +1,6 @@
 from mcp.server.fastmcp import FastMCP
-# import bludoor_mcp_claude_integration.tools.get_spent
-import bludoor_mcp_claude_integration.tools.lightspeed_data
+# import tools.get_spent
+import tools.lightspeed_data
 # Test with MCP Inspector [ uv run mcp dev mcp_server.py ]
 
 mcp = FastMCP("BlueDoor assistant")
@@ -38,7 +38,7 @@ def lightspeed_tool(user_input: str) -> list:
     "Get me the clients data that live in 10001 New York New York" -> user_input should be "location 10001 New York New York"
     "Search by area for the clients that live in 18015 Bethlehem PA" -> user_input should be "location 18015 Bethlehem PA"
     """
-    return bludoor_mcp_claude_integration.tools.lightspeed_data.main(user_input)
+    return tools.lightspeed_data.main(user_input)
 
 
 if __name__ == "__main__":

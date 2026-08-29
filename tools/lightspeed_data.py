@@ -119,8 +119,32 @@ def get_row_by_name(first: str, last: str) -> str:
     return response.json()
 
 # search for row by zipcode, city and state
-def get_row_by_location(zip: int, city: str, state: str) -> str: 
-    formula = f"AND({{address.zipCode}}='{zip}',{{address.city}}='{city}',{{address.state}}='{state}')"
+# def get_row_by_location(zip: int, city: str, state: str) -> str: 
+#     formula = f"AND({{address.zipCode}}='{zip}',{{address.city}}='{city}',{{address.state}}='{state}')"
+#     response = requests.get(
+#         f"{os.getenv("airtable_url")}/integrationTest",
+#         headers=headers,
+#         params={"filterByFormula": formula}
+#     )
+#     return response.json()
+def get_row_by_location(zip: int = None, city: str = None, state: str = None) -> str:
+    conditions = []
+    if zip:
+        conditions.append(f"{{address.zipCode}}='{zip}'")
+    if city:
+        conditions.append(f"{{address.city}}='{city}'")
+    if state:
+        conditions.append(f"{{address.state}}='{state}'")
+
+    if not conditions:
+        # no location info provided at all
+        return {"records": []}
+
+    if len(conditions) == 1:
+        formula = conditions[0]
+    else:
+        formula = f"AND({','.join(conditions)})"
+
     response = requests.get(
         f"{os.getenv("airtable_url")}/integrationTest",
         headers=headers,
@@ -141,6 +165,31 @@ def format_rows(rows: list) -> str:
     
     return formatted_table
 
+# def parse_location(target_name: str) -> str:
+#     parts = target_name.split()[1:]
+#     parts = [p for p in parts if p != "-"]
+
+#     zip_code = None
+#     city = None
+#     state = None
+
+#     # ZIP
+#     if parts and parts[0].isdigit():
+#         zip_code = parts.pop(0)
+
+#     # STATE (longest match from end)
+#     for i in range(len(parts), 0, -1):
+#         candidate = " ".join(parts[i-1:]).upper()
+#         if candidate in STATE_MAP:
+#             state = STATE_MAP[candidate]  # <-- normalize here
+#             parts = parts[:i-1]
+#             break
+
+#     # CITY
+#     if parts:
+#         city = " ".join(parts)
+
+#     return zip_code, city, state
 def parse_location(target_name: str) -> str:
     parts = target_name.split()[1:]
     parts = [p for p in parts if p != "-"]
@@ -149,19 +198,19 @@ def parse_location(target_name: str) -> str:
     city = None
     state = None
 
-    # ZIP
+    # ZIP (optional)
     if parts and parts[0].isdigit():
         zip_code = parts.pop(0)
 
-    # STATE (longest match from end)
+    # STATE (optional, longest match from end)
     for i in range(len(parts), 0, -1):
         candidate = " ".join(parts[i-1:]).upper()
         if candidate in STATE_MAP:
-            state = STATE_MAP[candidate]  # <-- normalize here
+            state = STATE_MAP[candidate]
             parts = parts[:i-1]
             break
 
-    # CITY
+    # CITY (optional, whatever's left)
     if parts:
         city = " ".join(parts)
 
